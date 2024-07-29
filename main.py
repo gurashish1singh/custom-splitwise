@@ -1,49 +1,36 @@
 from __future__ import annotations
 
-import click
-from dotenv import load_dotenv
+from typing import Any
 
-from constants import (
-    SPLITWISE_GET_EXPENSES,
-    SPLITWISE_GET_USER,
-)
-from models import (
-    Expense,
-    User,
-)
-from utils import (
-    _get_api_key,
-    _make_request,
+from fastapi import FastAPI
+
+from controller import (
+    ExpenseController,
+    UserController,
 )
 
-# Load env file
-load_dotenv()
+app = FastAPI()
 
 
-@click.group()
-def cli():
-    ...
+@app.get("/user")
+async def get_current_user_info():
+    controller = UserController()
+    return controller.get_current_user_information()
 
 
-@cli.command("user")
-def get_current_user() -> None:
-    click.secho("Getting information about current user")
-    response = _make_request(SPLITWISE_GET_USER, method="GET", api_key=_get_api_key())
-    user = User(**response.json()["user"])
-    click.secho(user, fg="cyan")
+@app.get("/user/{user_id}")
+async def get_user_info(user_id: int):
+    controller = UserController()
+    return controller.get_user_information(user_id=user_id)
 
 
-@cli.command("expenses")
-def get_all_expenses() -> None:
-    click.secho("Getting all epxenses for the current user")
-    response = _make_request(SPLITWISE_GET_EXPENSES, method="GET", api_key=_get_api_key())
-    # Limit of 20 from server
-    all_expenses = response.json()["expenses"]
-    for i, expense in enumerate(all_expenses, start=1):
-        click.secho(f"Expense number {i}", fg="green")
-        expense_model = Expense(**expense)
-        click.secho(expense_model, fg="yellow")
+@app.get("/expense")
+async def get_user_expenses(params: dict[str, Any] = {}):
+    controller = ExpenseController()
+    return controller.get_all_expenses(params=params)
 
 
-if __name__ == "__main__":
-    cli()
+@app.get("/expense/{expense_id}")
+async def get_expense(expense_id: int):
+    controller = ExpenseController()
+    return controller.get_expense(expense_id=expense_id)

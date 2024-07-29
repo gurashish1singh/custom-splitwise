@@ -1,12 +1,9 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Optional
 
-from pydantic import (
-    BaseModel,
-)
-
-from datetime import datetime
+from pydantic import BaseModel
 
 
 class BaseUser(BaseModel):
@@ -21,7 +18,7 @@ class BaseUser(BaseModel):
 
 class User(BaseUser):
     email: str
-    default_currency: str
+    default_currency: Optional[str] = None
 
 
 class ExpenseUserMetadata(BaseModel):
@@ -41,7 +38,7 @@ class Expense(BaseModel):
     id: int
     group_id: int
     description: str
-    details: str
+    details: Optional[str]
     category: ExpenseCategory
     cost: float
     currency_code: str
