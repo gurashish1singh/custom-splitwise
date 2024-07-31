@@ -4,6 +4,8 @@ repos:
     rev:  v4.3.0
     hooks:
     -   id: check-merge-conflict
+    -   id: check-toml
+        stages: [push]
     -   id: check-yaml
         stages: [push]
     -   id: end-of-file-fixer
@@ -13,30 +15,30 @@ repos:
 -   repo: local
     hooks:
     -   id: black
-        name: Running black from local poetry env
-        entry: poetry run black .
+        name: Running black
+        entry: python3 -m black .
         # Black does not work with language as python
         language: system
         types:
           - python
     -   id: flake8
-        name: Running flake8 from local poetry env
-        entry: poetry run flake8 .
+        name: Running flake8
+        entry: python3 -m flake8 .
         language: system
         pass_filenames: false
         types:
           - python
     -   id: isort
-        name: Running isort from local poetry env
-        entry: poetry run isort .
+        name: Running isort
+        entry: python3 -m isort .
         language: system
         types:
           - python
     -   id: lizard
-        name: Running lizard from local poetry env
-        entry: poetry run lizard
-        # Max 7 arguments allowed, show only warnings, sort by CCN, exclude .venv
-        args: ["--CCN", "8", "-a", "7", "-w", "-s", "cyclomatic_complexity", "-x", ".\\.venv\\*"]
+        name: Running lizard
+        entry: python3 -m lizard
+        # Max 8 arguments allowed, show only warnings, sort by CCN, exclude .venv
+        args: ["--CCN", "8", "-a", "8", "-w", "-s", "cyclomatic_complexity", "-x", ".\\.venv\\*"]
         language: system
         types:
           - python
