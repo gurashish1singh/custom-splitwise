@@ -12,9 +12,8 @@ A custom wrapper over Splitwise API to create charts and better visualize expens
             - API key (Store in .env file as SPLITWISE_OAUTH2_API_KEY)
     - Create a Python virtualenv using `python3 -m venv .venv`
     - Activate the environment using `source .venv/bin/activate`
-    - Install packages using the requirements file `pip3 install -r requirements.txt`
-    - Install pre-commit hooks: `pre-commit install --hook-type pre-commit --hook-type pre-push`
-    - Start the local FastAPI app: `fastapi dev`
+    - Run `bash local_setup.sh`
+        - This installs all requirements, commit hooks, and starts the app in dev mode
 
 #### Docker testing
     - Ensure docker engine is installed and running. Follow the steps: https://docs.docker.com/engine/install/
