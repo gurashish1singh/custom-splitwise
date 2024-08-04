@@ -20,6 +20,8 @@ services:
       - 5432:5432
     env_file:
       - ./db/local.env
+    volumes:
+        - postgres_data:/var/lib/postgresql/data/
     tty: true
 
   pgadmin:
@@ -32,3 +34,19 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
       - 5050:80
+
+  superset:
+      build:
+        context: .
+        dockerfile: ./superset/Dockerfile
+      container_name: superset
+      depends_on:
+      - db
+      - app
+      env_file:
+      - .env
+      ports:
+        - '8088:8088'
+
+volumes:
+      postgres_data:
