@@ -7,8 +7,7 @@ import requests
 from fastapi import HTTPException
 
 
-class SplitwiseAccessDenied(Exception):
-    ...
+class SplitwiseAccessDenied(Exception): ...
 
 
 def _get_api_key() -> str:

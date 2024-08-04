@@ -44,9 +44,11 @@ pathspec==0.12.1
 platformdirs==4.2.2
 pre-commit==3.8.0
 prompt_toolkit==3.0.47
+psycopg2==2.9.9
 pure_eval==0.2.3
 pycodestyle==2.12.0
 pydantic==2.8.2
+pydantic-settings==2.4.0
 pydantic_core==2.20.1
 pyflakes==3.2.0
 Pygments==2.18.0

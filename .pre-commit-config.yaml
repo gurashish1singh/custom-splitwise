@@ -1,3 +1,4 @@
+#!/bin/sh
 default_stages: [commit]
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
@@ -12,33 +13,18 @@ repos:
         stages: [push]
     -   id: trailing-whitespace
         stages: [push]
--   repo: local
+-   repo: https://github.com/psf/black
+    rev: 24.4.2
     hooks:
     -   id: black
-        name: Running black
-        entry: python3 -m black .
-        # Black does not work with language as python
-        language: system
-        types:
-          - python
+        name: Running black formatter and linter
+-   repo: https://github.com/PyCQA/flake8
+    rev: 7.1.0
+    hooks:
     -   id: flake8
-        name: Running flake8
-        entry: python3 -m flake8 .
-        language: system
-        pass_filenames: false
-        types:
-          - python
+        name: Running flake8 linter
+-   repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
     -   id: isort
         name: Running isort
-        entry: python3 -m isort .
-        language: system
-        types:
-          - python
-    -   id: lizard
-        name: Running lizard
-        entry: python3 -m lizard
-        # Max 8 arguments allowed, show only warnings, sort by CCN, exclude .venv
-        args: ["--CCN", "8", "-a", "8", "-w", "-s", "cyclomatic_complexity", "-x", ".\\.venv\\*"]
-        language: system
-        types:
-          - python
