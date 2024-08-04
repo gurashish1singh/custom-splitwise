@@ -100,5 +100,5 @@ class Expense(BaseModel):
     updated_at: datetime
     updated_by: Optional[BaseUser]
     deleted_at: Optional[datetime]
-    deleted_by: Optional[User]
+    deleted_by: Optional[BaseUser]
     users: list[ExpenseUserMetadata]

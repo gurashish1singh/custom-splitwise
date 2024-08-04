@@ -4,17 +4,16 @@ import os
 import sys
 from logging.config import fileConfig
 
-from dotenv import load_dotenv
 from sqlalchemy import (
     engine_from_config,
     pool,
 )
 
 from alembic import context
+from config import settings
 from db.models import Base
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv(os.path.join(BASE_DIR, ".env"))
 sys.path.append(BASE_DIR)
 
 # this is the Alembic Config object, which provides
@@ -39,7 +38,7 @@ target_metadata = Base.metadata
 
 
 def get_url() -> str:
-    return os.getenv("DATABASE_URL")
+    return settings.database_url
 
 
 # def do_run_migrations(connection: Connection) -> None:
