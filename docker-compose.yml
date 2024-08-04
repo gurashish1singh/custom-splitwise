@@ -3,10 +3,6 @@ services:
     depends_on:
       - db
       - pgadmin
-      # db:
-      #   condition: service_healthy
-      # pgadmin:
-      #   condition: service_healthy
     container_name: splitwise
     build:
       context: .
