@@ -3,16 +3,18 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import (
+    Depends,
     FastAPI,
 )
+from sqlalchemy.orm import Session
 
-from controller import (
+from app.controller import (
     ExpenseController,
-    GroupController,
     FriendController,
+    GroupController,
     UserController,
 )
-
+from db.session import get_session
 
 app = FastAPI()
 
@@ -28,6 +30,12 @@ async def get_current_user_info():
 async def get_user_info(user_id: int):
     controller = UserController()
     return controller.get_user_information(user_id=user_id)
+
+
+@app.post("/user")
+async def save_user_info(session: Session = Depends(get_session)):
+    controller = UserController()
+    return controller.add_user_to_db(session)
 
 
 # Friend related
