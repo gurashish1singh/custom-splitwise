@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 
+from app import response
 from app.constants import (
     SPLITWISE_GET_CURRENT_USER,
     SPLITWISE_GET_CURRENT_USER_FRIENDS,
@@ -21,11 +21,11 @@ from app.models import (
     Groups,
     User,
 )
-from db.operations import add_user_info
+from db.operations import (
+    add_expenses,
+    add_user_info,
+)
 from utils import _make_request
-
-# Load env file
-load_dotenv()
 
 
 class UserController:
@@ -45,7 +45,7 @@ class UserController:
         response = _make_request(url=SPLITWISE_GET_CURRENT_USER_FRIENDS, method="GET")
         return Friends(**response.json())
 
-    def add_user_to_db(self, session: Session):
+    def add_user_to_db(self, session: Session) -> response.User:
         user_info = self.get_current_user_information()
         return add_user_info(session=session, user=user_info)
 
@@ -61,6 +61,10 @@ class ExpenseController:
     def get_expense(self, expense_id: int) -> Expense:
         response = _make_request(f"{SPLITWISE_GET_EXPENSE}/{expense_id}", method="GET")
         return Expense(**response.json()["expense"])
+
+    def add_all_expenses_to_db(self, session: Session, params: dict[str, str]) -> list[response.Expense]:
+        all_user_expenses = self.get_all_expenses(params=params)
+        return add_expenses(session=session, expenses=all_user_expenses)
 
 
 class GroupController:

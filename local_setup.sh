@@ -30,7 +30,7 @@ start_app()
 {
     msg "Starting dev fastapi app"
     # have docker run the app on port 80
-    fastapi dev --port 80 --host 0.0.0.0
+    fastapi dev --port 8000 --host 0.0.0.0
     echo
 }
 

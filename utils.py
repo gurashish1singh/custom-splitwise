@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-import os
+from functools import lru_cache
 from typing import Any
 
 import requests
 from fastapi import HTTPException
 
+from config import settings
 
-class SplitwiseAccessDenied(Exception): ...
 
-
+@lru_cache
 def _get_api_key() -> str:
-    api_key = os.getenv("SPLITWISE_OAUTH2_API_KEY")
+    api_key = settings.splitwise_oauth2_api_key
     if api_key is None:
         raise RuntimeError("SPLITWISE_OAUTH2_API_KEY is missing from the .env file.")
     return api_key
