@@ -28,56 +28,33 @@ from app.response import (
 )
 from db.session import get_session
 
-app = FastAPI()
+app = FastAPI(title="Splitwise customized")
 
 
-# User related
+"""
+Endpoints for interacting with the Splitwise API
+"""
+
+
 @app.get("/user", response_model=User, name="Get current user info from splitwise")
 async def get_current_user_info():
     controller = UserController()
     return controller.get_current_user_information()
 
 
-@app.get("/user/{user_id}", response_model=User, name="Get user info from splitwise")
-async def get_user_info(user_id: int):
-    controller = UserController()
-    return controller.get_user_information(user_id=user_id)
-
-
-@app.post("/user", response_model=UserResponse, name="Save current user info from splitwise to internal db")
-async def save_user_info(session: Session = Depends(get_session)):
-    controller = UserController()
-    return controller.add_user_to_db(session)
-
-
-# Friend related
-@app.get("/get_friends", response_model=Friends)
+@app.get("/get_friends", response_model=Friends, name=r"Get current user friends from splitwise")
 async def get_current_user_friends():
     controller = UserController()
     return controller.current_user_friends()
 
 
-@app.get("/get_friend/{friend_id}", response_model=Friend)
-async def get_friend_info(friend_id: int):
-    controller = FriendController()
-    return controller.get_friend_info(friend_id=friend_id)
-
-
-# Group related
-@app.get("/get_groups", response_model=Groups)
+@app.get("/get_groups", response_model=Groups, name="Get current user groups from splitwise")
 async def get_current_user_groups():
     controller = UserController()
     return controller.get_current_user_groups()
 
 
-@app.get("/get_group/{group_id}", response_model=Group)
-async def get_group_info(group_id: int):
-    controller = GroupController()
-    return controller.get_group_info(group_id=group_id)
-
-
-# Expense related
-@app.get("/expense", response_model=list[Expense])
+@app.get("/expense", response_model=list[Expense], name="Get current user expenses from splitwise")
 async def get_user_expenses(
     group_id: Optional[int] = None,
     friend_id: Optional[int] = None,
@@ -85,8 +62,8 @@ async def get_user_expenses(
     dated_before: Optional[str] = None,
     updated_after: Optional[str] = None,
     updated_before: Optional[str] = None,
-    limit: Optional[str] = 50,
-    offset: Optional[str] = 0,
+    limit: Optional[int] = 100,
+    offset: Optional[int] = 0,
 ):
     # Group id and friend id are mutually exclusive (only one will be returned)
     params = {
@@ -105,13 +82,48 @@ async def get_user_expenses(
     return controller.get_all_expenses(params=params)
 
 
-@app.get("/expense/{expense_id}", response_model=Expense)
+@app.get(
+    "/expense/{expense_id}", response_model=Expense, name="Get expense info from splitiwise for an individual expense"
+)
 async def get_expense(expense_id: int):
     controller = ExpenseController()
     return controller.get_expense(expense_id=expense_id)
 
 
-@app.post("/expense", response_model=list[ExpenseResponse])
+@app.get("/user/{user_id}", response_model=User, name="Get a particular user info from splitwise")
+async def get_user_info(user_id: int):
+    controller = UserController()
+    return controller.get_user_information(user_id=user_id)
+
+
+@app.get(
+    "/get_friend/{friend_id}", response_model=Friend, name="Get information for a particular friend from splitwise"
+)
+async def get_friend_info(friend_id: int):
+    controller = FriendController()
+    return controller.get_friend_info(friend_id=friend_id)
+
+
+@app.get("/get_group/{group_id}", response_model=Group, name="Get information for a particular group from splitwise")
+async def get_group_info(group_id: int):
+    controller = GroupController()
+    return controller.get_group_info(group_id=group_id)
+
+
+"""
+Endpoints below this section are for interacting with internal database
+"""
+
+
+@app.post("/user", response_model=UserResponse, name="Save current user info from splitwise to internal db")
+async def save_user_info(session: Session = Depends(get_session)):
+    controller = UserController()
+    return controller.add_user_to_db(session)
+
+
+@app.post(
+    "/expense", response_model=list[ExpenseResponse], name="Save current user expenses from splitwise to internal db"
+)
 async def add_user_expenses_to_db(
     session: Session = Depends(get_session),
     group_id: Optional[int] = None,
@@ -120,8 +132,8 @@ async def add_user_expenses_to_db(
     dated_before: Optional[str] = None,
     updated_after: Optional[str] = None,
     updated_before: Optional[str] = None,
-    limit: Optional[str] = 50,
-    offset: Optional[str] = 0,
+    limit: Optional[int] = 100,
+    offset: Optional[int] = 0,
 ):
     # Group id and friend id are mutually exclusive (only one will be returned)
     params = {

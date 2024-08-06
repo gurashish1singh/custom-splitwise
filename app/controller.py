@@ -52,11 +52,21 @@ class UserController:
 
 class ExpenseController:
     def get_all_expenses(self, params: dict[str, str]) -> list[Expense]:
-        response = _make_request(url=SPLITWISE_GET_EXPENSES, method="GET", params=params)
-        all_expenses = []
-        for expense in response.json()["expenses"]:
-            all_expenses.append(Expense(**expense))
-        return all_expenses
+        cleaned_expenses = []
+        expenses = []
+        page_limit = params.get("limit")
+
+        while True:
+            response = _make_request(url=SPLITWISE_GET_EXPENSES, method="GET", params=params)
+            interim_expenses = response.json()["expenses"]
+            if len(interim_expenses) == 0:
+                break
+            expenses.extend(interim_expenses)
+            params["offset"] += int(page_limit)
+
+        for expense in expenses:
+            cleaned_expenses.append(Expense(**expense))
+        return cleaned_expenses
 
     def get_expense(self, expense_id: int) -> Expense:
         response = _make_request(f"{SPLITWISE_GET_EXPENSE}/{expense_id}", method="GET")
