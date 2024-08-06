@@ -2,7 +2,6 @@ services:
   app:
     depends_on:
       - db
-      - pgadmin
     container_name: splitwise
     build:
       context: .
@@ -29,6 +28,7 @@ services:
     image: dpage/pgadmin4
     depends_on:
       - db
+      - app
     environment:
       - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
       - PGADMIN_DEFAULT_PASSWORD=admin
@@ -36,17 +36,33 @@ services:
       - 5050:80
 
   superset:
-      build:
-        context: .
-        dockerfile: ./superset/Dockerfile
-      container_name: superset
-      depends_on:
+    build:
+      context: .
+      dockerfile: ./superset/Dockerfile
+    container_name: superset
+    depends_on:
       - db
       - app
-      env_file:
-      - .env
-      ports:
-        - '8088:8088'
+    env_file:
+    - .env
+    ports:
+      - '8088:8088'
+
+  superset-create-dashboard:
+    build:
+      context: .
+      dockerfile: ./superset/dashboard/Dockerfile
+    container_name: superset-create-dashboard
+    env_file:
+    - .env
+    depends_on:
+      superset:
+        condition: service_healthy
+      db:
+        condition: service_started
+    volumes:
+      - ./superset/dashboard/scripts:/scripts
+    tty: true
 
 volumes:
       postgres_data:
