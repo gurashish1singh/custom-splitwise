@@ -86,7 +86,7 @@ class ExpenseCategory(BaseModel):
 
 class Expense(BaseModel):
     id: int
-    group_id: int
+    group_id: Optional[int]
     description: str
     details: Optional[str]
     category: ExpenseCategory
@@ -96,7 +96,7 @@ class Expense(BaseModel):
     date: datetime
     created_at: datetime
     created_by: BaseUser
-    creation_method: str
+    creation_method: Optional[str]
     updated_at: datetime
     updated_by: Optional[BaseUser]
     deleted_at: Optional[datetime]
