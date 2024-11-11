@@ -8,14 +8,30 @@ msg()
     echo "$PRETTY_LINES"
     echo "$1"
     echo "$PRETTY_LINES"
+    echo
 }
 
 setup_env()
 {
-    msg "Installing requirements"
+    msg "Setting up local development environment"
+    install_and_activate_venv
+    msg "Installing pacakages"
     pip3 install --no-cache-dir -r requirements.txt
-    msg "Installed all necessary packages"
+    msg "Created a new virtualenv, activated it and installed all necessary packages"
     echo
+}
+
+install_and_activate_venv()
+{
+    msg "Creating and activating virtual environment"
+    python3 -m venv .venv
+    if [ -d ".venv/Scripts/" ]; then
+        source .venv/Scripts/activate
+    fi
+
+    if [ -d ".venv/bin/" ]; then
+        source .venv/bin/activate
+    fi
 }
 
 setup_pre_commit()
@@ -26,15 +42,19 @@ setup_pre_commit()
     echo
 }
 
-start_app()
+copy_env_files()
 {
-    msg "Starting dev fastapi app"
-    # have docker run the app on port 80
-    fastapi dev --port 8000 --host 0.0.0.0
-    echo
+    msg "Copying example env files"
+    if [ ! -f .env ]; then
+        cp .env.example .env
+    fi
+    if [ ! -f ./db/local.env ]; then
+        cp ./db/local.env.example ./db/local.env
+    fi
+    msg "Copied example env files. Please update both .env and ./db/local/.env files."
 }
 
 msg "Starting project setup"
 setup_env
 setup_pre_commit
-start_app
+copy_env_files

@@ -22,6 +22,9 @@ class User(Base):
     email = Column(String, nullable=True)
     default_currency = Column(String, nullable=True)
 
+    def dict(self) -> dict:
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
 
 class Expense(Base):
     __tablename__ = "expenses"
@@ -42,3 +45,6 @@ class Expense(Base):
     updated_by = Column(String, nullable=True)
     deleted_at = Column(DateTime, nullable=True)
     deleted_by = Column(String, nullable=True)
+
+    def dict(self) -> dict:
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

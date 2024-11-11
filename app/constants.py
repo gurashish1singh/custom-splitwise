@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+DEFAULT_PAGE_LIMIT = 100
+
 # Splitwise related constants
 SPLITWISE_SITE = "https://secure.splitwise.com"
 SPLITWISE_API_VERSION = "/api/v3.0"

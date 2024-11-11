@@ -8,6 +8,7 @@ from fastapi import (
 )
 from sqlalchemy.orm import Session
 
+from app.constants import DEFAULT_PAGE_LIMIT
 from app.controller import (
     ExpenseController,
     FriendController,
@@ -54,7 +55,7 @@ async def get_current_user_groups():
     return controller.get_current_user_groups()
 
 
-@app.get("/expense", response_model=list[Expense], name="Get current user expenses from splitwise")
+@app.get("/expenses", response_model=list[Expense], name="Get current user expenses from splitwise")
 async def get_user_expenses(
     group_id: Optional[int] = None,
     friend_id: Optional[int] = None,
@@ -62,7 +63,7 @@ async def get_user_expenses(
     dated_before: Optional[str] = None,
     updated_after: Optional[str] = None,
     updated_before: Optional[str] = None,
-    limit: Optional[int] = 100,
+    limit: Optional[int] = DEFAULT_PAGE_LIMIT,
     offset: Optional[int] = 0,
 ):
     # Group id and friend id are mutually exclusive (only one will be returned)
@@ -132,8 +133,9 @@ async def add_user_expenses_to_db(
     dated_before: Optional[str] = None,
     updated_after: Optional[str] = None,
     updated_before: Optional[str] = None,
-    limit: Optional[int] = 100,
+    limit: Optional[int] = DEFAULT_PAGE_LIMIT,
     offset: Optional[int] = 0,
+    unlimited: bool = False,
 ):
     # Group id and friend id are mutually exclusive (only one will be returned)
     params = {
@@ -149,4 +151,4 @@ async def add_user_expenses_to_db(
     # Clean params before passing to splitwise api
     params = {k: v for k, v in params.items() if v is not None}
     controller = ExpenseController()
-    return controller.add_all_expenses_to_db(session=session, params=params)
+    return controller.add_all_expenses_to_db(session=session, params=params, unlimited=unlimited)

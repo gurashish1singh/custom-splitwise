@@ -11,10 +11,11 @@ load_dotenv()
 SUPERSET_USER = os.getenv("SUPERSET_ADMIN_USERNAME")
 SUPERSET_PASSWORD = os.getenv("SUPERSET_ADMIN_PASSWORD")
 DATABASE_URL = os.getenv("DATABASE_URL")
+SUPERSET_PORT = os.getenv("SUPERSET_PORT")
 DATASOURCE_NAME = "public.expenses"
 
 # Using custom ip address configured in docker
-client = SupersetAPIClient(host="http://superset:8088")
+client = SupersetAPIClient(host=f"http://superset:{SUPERSET_PORT}")
 client.login(username=SUPERSET_USER, password=SUPERSET_PASSWORD)
 
 

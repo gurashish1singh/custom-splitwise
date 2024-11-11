@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from typing import Union
+
 from sqlalchemy.orm import Session
 
-from app import response
 from app.constants import (
+    DEFAULT_PAGE_LIMIT,
     SPLITWISE_GET_CURRENT_USER,
     SPLITWISE_GET_CURRENT_USER_FRIENDS,
     SPLITWISE_GET_CURRENT_USER_GROUPS,
@@ -45,24 +47,27 @@ class UserController:
         response = _make_request(url=SPLITWISE_GET_CURRENT_USER_FRIENDS, method="GET")
         return Friends(**response.json())
 
-    def add_user_to_db(self, session: Session) -> response.User:
+    def add_user_to_db(self, session: Session) -> User:
         user_info = self.get_current_user_information()
         return add_user_info(session=session, user=user_info)
 
 
 class ExpenseController:
-    def get_all_expenses(self, params: dict[str, str]) -> list[Expense]:
+
+    def get_all_expenses(self, params: dict[str, Union[int, str]], unlimited: bool = False) -> list[Expense]:
         cleaned_expenses = []
         expenses = []
-        page_limit = params.get("limit")
+        page_limit = int(params.get("limit", DEFAULT_PAGE_LIMIT))
 
         while True:
             response = _make_request(url=SPLITWISE_GET_EXPENSES, method="GET", params=params)
             interim_expenses = response.json()["expenses"]
-            if len(interim_expenses) == 0:
-                break
             expenses.extend(interim_expenses)
-            params["offset"] += int(page_limit)
+            if not unlimited or len(interim_expenses) == 0:
+                break
+
+            # This is used to get all expenses since the beginning of the account
+            params["offset"] += page_limit
 
         for expense in expenses:
             cleaned_expenses.append(Expense(**expense))
@@ -72,13 +77,13 @@ class ExpenseController:
         response = _make_request(f"{SPLITWISE_GET_EXPENSE}/{expense_id}", method="GET")
         return Expense(**response.json()["expense"])
 
-    def add_all_expenses_to_db(self, session: Session, params: dict[str, str]) -> list[response.Expense]:
-        all_user_expenses = self.get_all_expenses(params=params)
+    def add_all_expenses_to_db(self, session: Session, params: dict[str, str], unlimited: bool = False):
+        all_user_expenses = self.get_all_expenses(params=params, unlimited=unlimited)
         return add_expenses(session=session, expenses=all_user_expenses)
 
 
 class GroupController:
-    def get_group_info(slef, group_id: int) -> Group:
+    def get_group_info(self, group_id: int) -> Group:
         response = _make_request(url=f"{SPLITWISE_GET_GROUP}/{group_id}", method="GET")
         return Group(**response.json()["group"])
 
