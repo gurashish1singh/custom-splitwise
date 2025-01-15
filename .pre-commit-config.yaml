@@ -1,18 +1,18 @@
 #!/bin/sh
-default_stages: [commit]
+default_stages: [pre-commit]
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev:  v4.3.0
     hooks:
     -   id: check-merge-conflict
     -   id: check-toml
-        stages: [push]
+        stages: [pre-push]
     -   id: check-yaml
-        stages: [push]
+        stages: [pre-push]
     -   id: end-of-file-fixer
-        stages: [push]
+        stages: [pre-push]
     -   id: trailing-whitespace
-        stages: [push]
+        stages: [pre-push]
 -   repo: https://github.com/psf/black
     rev: 24.4.2
     hooks:

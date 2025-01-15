@@ -1,4 +1,3 @@
-#!/bin/bash
 set -eou pipefail
 
 PRETTY_LINES=$(printf "=%.0s" {1..80})

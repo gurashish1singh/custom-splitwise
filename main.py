@@ -43,13 +43,13 @@ async def get_current_user_info():
     return controller.get_current_user_information()
 
 
-@app.get("/get_friends", response_model=Friends, name=r"Get current user friends from splitwise")
+@app.get("/friends", response_model=Friends, name=r"Get current user friends from splitwise")
 async def get_current_user_friends():
     controller = UserController()
     return controller.current_user_friends()
 
 
-@app.get("/get_groups", response_model=Groups, name="Get current user groups from splitwise")
+@app.get("/groups", response_model=Groups, name="Get current user groups from splitwise")
 async def get_current_user_groups():
     controller = UserController()
     return controller.get_current_user_groups()
@@ -97,15 +97,13 @@ async def get_user_info(user_id: int):
     return controller.get_user_information(user_id=user_id)
 
 
-@app.get(
-    "/get_friend/{friend_id}", response_model=Friend, name="Get information for a particular friend from splitwise"
-)
+@app.get("/friend/{friend_id}", response_model=Friend, name="Get information for a particular friend from splitwise")
 async def get_friend_info(friend_id: int):
     controller = FriendController()
     return controller.get_friend_info(friend_id=friend_id)
 
 
-@app.get("/get_group/{group_id}", response_model=Group, name="Get information for a particular group from splitwise")
+@app.get("/group/{group_id}", response_model=Group, name="Get information for a particular group from splitwise")
 async def get_group_info(group_id: int):
     controller = GroupController()
     return controller.get_group_info(group_id=group_id)

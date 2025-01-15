@@ -1,7 +1,6 @@
-#!/bin/bash
 set -eou pipefail
 
-PORT=${1-80}
+PORT=${1-8082}
 
 start_app()
 {
