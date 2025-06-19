@@ -143,7 +143,6 @@ stacked_category_chart_params = {
     "show_legend": True,
     "sort_series_type": "sum",
     "stack": "Stack",
-    "show_legend": True,
     "legendType": "scroll",
     "legendOrientation": "top",
     "tooltipTimeFormat": "smart_date",

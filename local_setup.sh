@@ -34,14 +34,6 @@ install_and_activate_venv()
     fi
 }
 
-setup_pre_commit()
-{
-    msg "Installing pre-commit hooks"
-    pre-commit install --hook-type pre-commit --hook-type pre-push
-    msg "Finished installing hooks"
-    echo
-}
-
 copy_env_files()
 {
     msg "Copying example env files"
@@ -56,5 +48,4 @@ copy_env_files()
 
 msg "Starting project setup"
 setup_env
-setup_pre_commit
 copy_env_files
