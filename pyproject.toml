@@ -16,7 +16,8 @@ line-length = 120
 # I -> isort.
 # flake8-bugbear (`B`)
 select = ["E4", "E7", "E9", "F", "I", "B"]
-ignore = []
+# BOO8 - https://docs.astral.sh/ruff/rules/function-call-in-default-argument/ (mostly ignoring for pydantic)
+ignore = ["B008"]
 
 # Avoid trying to fix flake8-bugbear (`B`) violations.
 unfixable = ["B"]
