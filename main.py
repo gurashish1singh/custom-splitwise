@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from fastapi import (
     Depends,
     FastAPI,
@@ -28,6 +26,7 @@ from app.response import (
     UserResponse,
 )
 from db.session import get_session
+from typing import Optional
 
 app = FastAPI(title="Splitwise customized")
 
@@ -39,7 +38,10 @@ Endpoints for interacting with the Splitwise API
 
 @app.get("/user", response_model=User, name="Get current user info from splitwise")
 async def get_current_user_info():
-    controller = UserController()
+    try:
+        controller = UserController()
+    except:
+        ...
     return controller.get_current_user_information()
 
 
