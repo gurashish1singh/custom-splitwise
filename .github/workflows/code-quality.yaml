@@ -18,4 +18,4 @@ jobs:
           pip install "$PACKAGE_LINE"
 
       - name: Lint code
-        run: ruff check -output-format=github .
+        run: ruff check --output-format=github .
