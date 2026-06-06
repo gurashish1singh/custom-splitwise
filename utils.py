@@ -9,7 +9,7 @@ from typing import (
 import requests
 from fastapi import HTTPException
 
-from config import settings
+from base_config import settings
 
 
 @lru_cache

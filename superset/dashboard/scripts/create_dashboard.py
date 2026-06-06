@@ -3,15 +3,13 @@ from __future__ import annotations
 import json
 import os
 
-from dotenv import load_dotenv
 from superset_api import SupersetAPIClient
+from superset_config import settings
 
-load_dotenv()
-
-SUPERSET_USER = os.getenv("SUPERSET_ADMIN_USERNAME")
-SUPERSET_PASSWORD = os.getenv("SUPERSET_ADMIN_PASSWORD")
-DATABASE_URL = os.getenv("DATABASE_URL")
-SUPERSET_PORT = os.getenv("SUPERSET_PORT")
+SUPERSET_USER = settings.superset_admin_username
+SUPERSET_PASSWORD = settings.superset_admin_password
+DATABASE_URL = settings.database_url
+SUPERSET_PORT = settings.superset_port
 DATASOURCE_NAME = "public.expenses"
 
 # Using custom ip address configured in docker

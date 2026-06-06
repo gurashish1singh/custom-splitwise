@@ -10,7 +10,7 @@ from sqlalchemy import (
 )
 
 from alembic import context
-from config import settings
+from base_config import settings
 from db.models import Base
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

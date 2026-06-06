@@ -1,9 +1,13 @@
 FROM python:3.9-slim
 
-RUN pip install --no-cache-dir --upgrade requests python-dotenv
+RUN pip install --no-cache-dir --upgrade requests python-dotenv pydantic_settings
 
-COPY .env \
-    /superset/dashboard/ \
-    ./
+COPY superset/.env \
+    /superset/dashboard/scripts \
+    /app/
 
-CMD [ "python3", "/scripts/create_dashboard.py"]
+COPY superset/superset_config.py \
+    /app/
+
+
+CMD [ "python3", "/app/create_dashboard.py"]
