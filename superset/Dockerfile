@@ -2,20 +2,27 @@ FROM apache/superset:latest
 
 USER root
 
-RUN pip install mysqlclient pydantic_settings psycopg2
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pkg-config \
+    default-libmysqlclient-dev \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-ENV SUPERSET_ADMIN_USERNAME $SUPERSET_ADMIN_USERNAME
-ENV SUPERSET_ADMIN_EMAIL $SUPERSET_ADMIN_EMAIL
-ENV SUPERSET_ADMIN_PASSWORD $SUPERSET_ADMIN_PASSWORD
+RUN /app/.venv/bin/python -m ensurepip --upgrade
+RUN /app/.venv/bin/python -m pip install --upgrade pip
+RUN /app/.venv/bin/python -m pip install --no-cache-dir mysqlclient psycopg2 pydantic-settings
 
-COPY ./superset/superset-init.sh ./superset-init.sh
 
-COPY ./superset/superset_config.py \
-    config.py   \
-    .env \
+RUN apt-get remove -y gcc \
+    && apt-get autoremove -y
+
+COPY superset/superset-init.sh ./superset-init.sh
+COPY superset/superset_config.py \
+    superset/.env \
     /app/
 
-ENV SUPERSET_CONFIG_PATH /app/superset_config.py
+ENV SUPERSET_CONFIG_PATH=/app/superset_config.py
 
 USER superset
 ENTRYPOINT [ "./superset-init.sh" ]
